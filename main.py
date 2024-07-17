@@ -1,31 +1,36 @@
-import tkinter
-
+from customtkinter import *
 def new_game():# starts a new game
     global current,inputs
     current=inputs[0]
-    playerLabel.config(text=current+"'s Turn")
+    playerLabel.configure(text=current+"'s Turn")
     for row in range(3):
         for column in range(3):
-            buttons[row][column].config(text="")
+            buttons[row][column].configure(text="")
 
 def turn(row,column):#processes the user input and changes UI for the next move
     global current
-    if buttons[row][column]['text']=="" and check_status()==False:
-        buttons[row][column]['text']=current
+    if buttons[row][column].cget("text")=="" and check_status()==False:
+        buttons[row][column].configure(text=current)
         if check_status()==True:
-            playerLabel.config(text=current+" Wins")
+            playerLabel.configure(text=current+" Wins")
+            for row in range(3):
+                for column in range(3):
+                    buttons[row][column].configure(hover=False)
         elif check_status()==False:
             change_player()
-            playerLabel.config(text=current+"'s Turn")
+            playerLabel.configure(text=current+"'s Turn")
         elif check_status()=="Tie":
-            playerLabel.config(text="Tie")
+            for row in range(3):
+                for column in range(3):
+                    buttons[row][column].configure(hover=False)
+            playerLabel.configure(text="Tie")
 
 
 def space():#checks if any empty spaces are left on the board
     ct=9
     for row in range(3):
         for column in range(3):
-            if buttons[row][column]['text']!="":
+            if buttons[row][column].cget("text")!="":
                 ct-=1
     if ct==0:
         return False
@@ -33,14 +38,27 @@ def space():#checks if any empty spaces are left on the board
 
 def check_status():#checks for win or a tie after every move
     for row in range(3):
-        if buttons[row][0]['text']==buttons[row][1]['text']==buttons[row][2]['text']!="":
+        if buttons[row][0].cget("text")==buttons[row][1].cget("text")==buttons[row][2].cget("text")!="":
+            buttons[row][0].configure(fg_color='#03cf00')
+            buttons[row][1].configure(fg_color='#03cf00')
+            buttons[row][2].configure(fg_color='#03cf00')
             return True
     for column in range(3):
-        if buttons[0][column]['text']==buttons[1][column]['text']==buttons[2][column]['text']!="":
+        if buttons[0][column].cget("text")==buttons[1][column].cget("text")==buttons[2][column].cget("text")!="":
+            buttons[0][column].configure(fg_color='#03cf00')
+            buttons[1][column].configure(fg_color='#03cf00')
+            buttons[2][column].configure(fg_color='#03cf00')
             return True
-    if buttons[0][0]['text']==buttons[1][1]['text']==buttons[2][2]['text']!="":
+    if buttons[0][0].cget("text")==buttons[1][1].cget("text")==buttons[2][2].cget("text")!="":
+        buttons[0][0].configure(fg_color='#03cf00')
+        buttons[1][1].configure(fg_color='#03cf00')
+        buttons[2][2].configure(fg_color='#03cf00')
         return True
-    elif buttons[0][2]['text']==buttons[1][1]['text']==buttons[2][0]['text']!="":
+    elif buttons[0][2].cget("text")==buttons[1][1].cget("text")==buttons[2][0].cget("text")!="":
+        buttons[0][2].configure(fg_color='#03cf00')
+        buttons[1][1].configure(fg_color='#03cf00')
+        buttons[2][0].configure(fg_color='#03cf00')
+
         return True
     
     
@@ -59,26 +77,30 @@ def change_player(): #changes player after every move
 
 
 
-window=tkinter.Tk()
-window.title("Tic Tac Toe")
+app=CTk()
+app.title("Tic Tac Toe")
+app.resizable(False,False)
+set_appearance_mode("light")
 inputs=["X","O"]#the two players
 current=inputs[0]#active player
 buttons=[[None,None,None],
          [None,None,None],
          [None,None,None]]#board
 
-playerLabel=tkinter.Label(text=current+"'s turn",font=(50))
+head=CTkLabel(app,text="Tic Tac Toe",font=('Poppins',32,'bold'),pady=20)
+head.pack()
+playerLabel=CTkLabel(app,text=current+"'s Turn",font=('Poppins',22))
 playerLabel.pack()
 
-frame=tkinter.Frame(window,border=20)
-frame.pack()
+frame=CTkFrame(app)
+frame.pack(padx= 30, pady=20)
 
 for row in range(3):#buttons on the board
     for column in range(3):
-        buttons[row][column]=tkinter.Button(frame,text="",width=10,height=5,command=lambda row=row,column=column:turn(row,column))
-        buttons[row][column].grid(row=row,column=column)
+        buttons[row][column]=CTkButton(frame,text="",width=100,fg_color="#a9b0b0",hover_color='#919999',font=('Monospace',40,"bold"),height=100,command=lambda row=row,column=column:turn(row,column))
+        buttons[row][column].grid(row=row,column=column,padx= 10, pady=10)
 
-restartbtn=tkinter.Button(text="Restart",font=(40),padx=10,pady=5,command=new_game)
-restartbtn.pack()#restarts the game
+restartbtn=CTkButton(app,text="Restart",fg_color='#00a656',hover_color='#008746',width=100,height=40,font=('Poppins',20),command=new_game)
+restartbtn.pack(padx= 10, pady=20)#restarts the game
 
-window.mainloop()
+app.mainloop()
