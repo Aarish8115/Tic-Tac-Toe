@@ -5,7 +5,7 @@ def new_game():# starts a new game
     playerLabel.configure(text=current+"'s Turn")
     for row in range(3):
         for column in range(3):
-            buttons[row][column].configure(text="")
+            buttons[row][column].configure(text="",fg_color="#a9b0b0",hover=True)
 
 def turn(row,column):#processes the user input and changes UI for the next move
     global current
@@ -22,7 +22,7 @@ def turn(row,column):#processes the user input and changes UI for the next move
         elif check_status()=="Tie":
             for row in range(3):
                 for column in range(3):
-                    buttons[row][column].configure(hover=False)
+                    buttons[row][column].configure(hover=False,fg_color='#4179e0')
             playerLabel.configure(text="Tie")
 
 
@@ -80,7 +80,7 @@ def change_player(): #changes player after every move
 app=CTk()
 app.title("Tic Tac Toe")
 app.resizable(False,False)
-set_appearance_mode("light")
+set_appearance_mode("dark")
 inputs=["X","O"]#the two players
 current=inputs[0]#active player
 buttons=[[None,None,None],
@@ -100,7 +100,7 @@ for row in range(3):#buttons on the board
         buttons[row][column]=CTkButton(frame,text="",width=100,fg_color="#a9b0b0",hover_color='#919999',font=('Monospace',40,"bold"),height=100,command=lambda row=row,column=column:turn(row,column))
         buttons[row][column].grid(row=row,column=column,padx= 10, pady=10)
 
-restartbtn=CTkButton(app,text="Restart",fg_color='#00a656',hover_color='#008746',width=100,height=40,font=('Poppins',20),command=new_game)
+restartbtn=CTkButton(app,text="Restart",fg_color='#03cf00',hover_color='#008746',width=100,height=40,font=('Poppins',20),command=new_game)
 restartbtn.pack(padx= 10, pady=20)#restarts the game
 
 app.mainloop()
